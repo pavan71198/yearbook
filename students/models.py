@@ -30,14 +30,13 @@ class Profile(models.Model):
     department = models.CharField(max_length=3, choices=department_values)
     bio = models.CharField(max_length=1000)
     webmail = models.EmailField(max_length=50, default="")
-    email_verified = models.BooleanField(default=False)
     profile_verified = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.first_name+" "+self.user.last_name+" "+str(self.rollno)
 
 
-class Testimonal(models.Model):
+class Testimonial(models.Model):
     given_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='given_by')
     content = models.CharField(max_length = 1000)
     given_to = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='given_to')

@@ -3,6 +3,19 @@
 {% block title %}SAIL Year Book Portal{% endblock %}
 
 {% block content %}
-    <h1>Hello, world!</h1>
-    <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
+    {% if not logged_in %}
+    <h1>Welcome</h1>
+        <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
+    {% else %}
+        <p>{{ user.username }}</p>
+        <p>{{ user.get_full_name }}</p>
+        {% for testimonial in testimonials %}
+            <p>
+            {{ testimonial }}
+            </p>
+            <p>
+            {{ testimonial.given_by.get_full_name }}
+            </p>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
