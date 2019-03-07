@@ -28,7 +28,7 @@ class Profile(models.Model):
     rollno = models.IntegerField()
     program = models.CharField(max_length=2, choices=program_values)
     department = models.CharField(max_length=3, choices=department_values)
-    bio = models.CharField(max_length=1000)
+    bio = models.TextField(max_length=1000)
     webmail = models.EmailField(max_length=50, default="")
     profile_verified = models.BooleanField(default=False)
 
@@ -38,7 +38,7 @@ class Profile(models.Model):
 
 class Testimonial(models.Model):
     given_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='given_by')
-    content = models.CharField(max_length = 1000)
+    content = models.TextField(max_length = 1000)
     given_to = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='given_to')
 
     def __str__(self):
@@ -68,7 +68,7 @@ class ProfileQuestion (models.Model):
 class ProfileAnswers (models.Model):
     profile = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL)
     question = models.ForeignKey(ProfileQuestion, null=True, on_delete=models.SET_NULL)
-    answer = models.CharField(max_length = 1000)
+    answer = models.TextField(max_length = 1000)
 
     def __str__(self):
         return self.question.question+" "+self.profile.user.first_name+" "+self.profile.user.last_name
