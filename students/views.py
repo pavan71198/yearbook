@@ -17,7 +17,10 @@ def home(request):
             poll_questions = PollQuestion.objects.all()
             polls = {}
             for question in poll_questions:
-                polls[question] = PollAnswer.objects.filter(question=question)
+                answers = PollAnswer.objects.filter(question=question)
+                polls[question] = []
+                for answer in answers:
+                    polls[question].append((answer.answer, answer.voted_by))
             context = {
                 'testimonials': testimonials,
                 'polls': polls,
