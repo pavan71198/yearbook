@@ -19,14 +19,14 @@ def home(request):
             for question in poll_questions:
                 polls[question] = PollAnswer.objects.filter(question=question)
             context = {
-                'testimonials' : testimonials,
-                'polls' : polls,
-                'user' : user,
-                'logged_in' : logged_in
+                'testimonials': testimonials,
+                'polls': polls,
+                'user': user,
+                'logged_in': logged_in
             }
             return render(request, 'home.html', context)
         else:
             context = {
-                'logged_in' : logged_in
+                'logged_in': logged_in
             }
             return render(request, 'home.html', context)
