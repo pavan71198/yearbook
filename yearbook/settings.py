@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from .keys import SECRET_KEY, SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_KEY, SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_SECRET, SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_TENANT_ID
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +21,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@b6d%8li#5h85^fq4vgpfhh92yw1d634nwmjc-n-+&uk-ejlj!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -73,7 +73,7 @@ TEMPLATES = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.azuread_tenant.AzureADTenantOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -109,11 +109,24 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-SOCIAL_AUTH_FACEBOOK_KEY = '2262801150417760'
-SOCIAL_AUTH_FACEBOOK_SECRET = 'dbe2a3283f1ee4338d2ddeb399779c49'
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'students.pipelines.generate_username',
+    'social_core.pipeline.user.create_user',
+    'students.pipelines.create_new_profile',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
 
-LOGIN_URL = '/'
-LOGOUT_URL = '/'
+SOCIAL_AUTH_AZUREAD_OAUTH2_RESOURCE = 'https://graph.microsoft.com'
+GET_ALL_EXTRA_DATA = True
+
+LOGIN_URL = '/login/'
+LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 
 # Internationalization

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %} SAIL Year Book Portal {% endblock %}
+
+{% block content %}
+    {% if logged_in %}
+        <div class="container-fluid">
+            <h1 class="text-center mt-5">You are already logged in</h1>
+        </div>
+    {% else %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col"></div>
+                <div class="col">
+                    <div class="card my-5">
+                        <div class="card-body text-center">
+                            <a class="btn btn-primary" href="{% url "social:begin" "azuread-tenant-oauth2" %}">Login with Office 365</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col"></div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
