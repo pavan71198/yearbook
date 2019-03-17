@@ -26,6 +26,10 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('admin/', admin.site.urls),
     path('oauth/', include(social_django_urls, namespace='social')),
+    path('search/', student_views.search, name='search'),
+    path('add_vote/',student_views.add_vote, name='add_vote'),
+    path('delete_testimonial/',student_views.delete_testimonial, name='delete_testimonial'),
     path('<username>/', student_views.profile, name='profile'),
-    path('<username>/add_testimonial/', student_views.add_testimonial, name='add_testimonial')
+    path('<username>/add_testimonial/', student_views.add_testimonial, name='add_testimonial'),
+    path('<username>/change_answer/', student_views.change_answer, name='change_answer')
 ]

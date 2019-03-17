@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %} SAIL Year Book Portal {% endblock %}
+
+{% load static %}
+
+{% block content %}
+    <div class="container-fluid mt-4">
+        <div class="row">
+            {% for profile in profiles %}
+                <div class="col-lg-4 col-md-6 col-sm-12 my-2">
+                    <div class="card" style="display: inline-block; width: 100%;">
+                        <a href="{% url 'profile' profile.user.username %}">
+                            <div class="row no-gutters">
+                                <div class="col-5">
+                                    <img class="card-img" src="{% static 'no-profile-pic.png' %}" alt="Profile Picture">
+                                </div>
+                                <div class="col-7">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ profile.full_name }}</h5>
+                                        <h6 class="card-subtitle">
+                                            {{ profile.get_department_display }}
+                                            <br>
+                                            {{ profile.get_program_display }}
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <style>
+            .card-columns {
+                @include media-breakpoint-only(md) {
+                    column-count: 1;
+                }
+                @include media-breakpoint-only(lg) {
+                    column-count: 3;
+                }
+                @include media-breakpoint-only(xl) {
+                    column-count: 4;
+                }
+            }
+        </style>
+    </div>
+{% endblock %}

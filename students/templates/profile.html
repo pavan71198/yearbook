@@ -1,7 +1,190 @@
 {% extends 'base.html' %}
 
-{% block title %} {{ profile_user.get_full_name }} | SAIL Year Book Portal {% endblock %}
-
+{% block title %} {{ profile.full_name }} | SAIL Year Book Portal {% endblock %}
+{% load static %}
 {% block content %}
+    <div class="container-fluid">
+        <div class="row mt-4">
+            <div class="col-lg-3 col-md-12">
+                <div class="container">
+                    <div class="card">
+                        <img class="card-img-top" width="100%" src="{% static 'no-profile-pic.png' %}" alt="Profile Picture"/>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ profile.full_name }}</h5>
+                            <h6 class="card-subtitle">
+                                {{ profile.get_department_display }}
+                                <br>
+                                {{ profile.get_program_display }}
+                            </h6>
+                            <br>
+                            <div class="card-text">
+                                <h6><b>Webmail</b></h6>
+                                <p><a href="mailto:{{ profile.user.email }}">{{ profile.user.email }}</a></p>
+                                <h6><b>Bio</b></h6>
+                                <p>{{ profile.bio }}</p>
+                            </div>
+                        </div>
+                        {% if myprofile %}
+                            <a class="btn btn-primary" style="border-top-right-radius: 0;border-top-left-radius: 0" href="#">Edit Profile</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="container">
+                    {% for question,answer in answers.items %}
+                    <div class="card my-2 mx-lg-3">
+                        <div class="card-header">
+                            <div class="card-title">{{ question.question }}</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                {% if answer %}{{ answer.answer }}{% endif %}
+                            </div>
+                            {% if myprofile %}
+                                <p class="float-right mb-0">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#answer-modal-{{ question.id }}">
+                                        <i class="far fa-edit"></i>
+                                    </button>
+                                </p>
+                                <div class="modal fade" id="answer-modal-{{ question.id }}" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h6 class="modal-title">{{ question.question }}</h6>
+                                                <button type="button" class="close" data-dismiss="modal">
+                                                    <span>&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <textarea id="profile-answer-{{ question.id }}" autocomplete="off" class="form-control" rows="5" name="content" placeholder="Write your answer here">{% if answer %}{{answer.answer}}{% endif %}</textarea>
+                                                <br>
+                                                <button class="btn btn-primary" style="width: 100%;" onclick="changeAnswer({{ question.id }})">
+                                                    {% if answer %} Change {% else %} Add {% endif %} answer
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-12">
+                <div class="container">
+                    <h3 class="text-center">Testimonials</h3>
+                    {% if logged_in %}
+                        {% if not myprofile %}
+                            <button type="button" class="btn btn-primary" style="width: 100%;" data-toggle="modal" data-target="#testimonial-modal">
+                                {% if mytestimonial %} Edit {% else %} Add {% endif %}testimonial
+                            </button>
+                            <div class="modal fade" id="testimonial-modal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h6 class="modal-title">{% if mytestimonial %} Edit {% else %} Add {% endif %}testimonial</h6>
+                                            <button type="button" class="close" data-dismiss="modal">
+                                                <span>&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <textarea id="add-testimonial-form-content" autocomplete="off" class="form-control" rows="5" name="content" placeholder="Write your testimonial for {{ profile.full_name }} here">{% if mytestimonial %}{{mytestimonial.content}}{% endif %}</textarea>
+                                            <br>
+                                            <button class="btn btn-primary" style="width: 100%;" onclick="addTestimonial()">
+                                                {% if mytestimonial %} Edit {% else %} Add {% endif %}testimonial
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <a class="btn btn-primary" style="width: 100%;" href="{% url 'login' %}?next={% url 'profile' profile.user.username %}">Login to add Testimonial</a>
+                    {% endif %}
+                    {% for testimonial in testimonials %}
+                        <div class="card my-2 mx-lg-3" id="testimonial-{{ testimonial.id }}">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    {{ testimonial.content | linebreaksbr }}
+                                </p>
+                                <p class="float-left mb-0">
+                                    {% if myprofile or testimonial.given_by.user == user%}
+                                        <button class="btn btn-primary" onclick="deleteTestimonial({{ testimonial.id }})"><i class="fas fa-trash"></i></button>
+                                    {% endif %}
+                                </p>
+                                <p class="float-right">
+                                    <a href="{% url 'profile' testimonial.given_by.user.username %}">
+                                        ~ {{ testimonial.given_by.full_name }}
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
+{% block extrascripts %}
+    <script>
+        function deleteTestimonial(testimonial_id){
+            $.ajax({
+                type: "POST",
+                url: '/delete_testimonial/',
+                data: {
+                    'testimonial_id': testimonial_id,
+                    'csrfmiddlewaretoken': Cookies.get("csrftoken")
+                },
+                success: function (data) {
+                    if (data.status == "1"){
+                        $("#testimonial-"+testimonial_id.toString()).remove();
+                        alert("Testimonial deleted successfully");
+                    }
+                    else{
+                        alert(data.error);
+                    }
+                }
+            });
+        }
+        function addTestimonial() {
+            $.ajax({
+                type: "POST",
+                url: '{% url 'add_testimonial' profile.user.username %}',
+                data: {
+                    'content': $("#add-testimonial-form-content").val(),
+                    'csrfmiddlewaretoken': Cookies.get("csrftoken")
+                },
+                success: function (data) {
+                    if (data.status == "1"){
+                        location.reload();
+                    }
+                    else{
+                        alert(data.error);
+                    }
+                }
+            });
+        }
+        function changeAnswer(question_id) {
+            $.ajax({
+                type: "POST",
+                url: '{% url 'change_answer' profile.user.username %}',
+                data: {
+                    'question_id': question_id,
+                    'answer': $("#profile-answer-"+question_id.toString()).val(),
+                    'csrfmiddlewaretoken': Cookies.get("csrftoken")
+                },
+                success: function (data) {
+                    if (data.status == "1"){
+                        location.reload();
+                    }
+                    else{
+                        alert(data.error);
+                    }
+                }
+            });
+        }
+    </script>
 {% endblock %}

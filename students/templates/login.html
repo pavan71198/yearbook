@@ -14,8 +14,10 @@
                 <div class="col">
                     <div class="card my-5">
                         <div class="card-body text-center">
-                            <a class="btn btn-primary" href="{% url "social:begin" "azuread-tenant-oauth2" %}">Login with Office 365</a>
+                            <h4 class="card-title">Welcome to SAIL Year Book Portal</h4>
+                            <h6 class="card-subtitle">Developed by <a href="https://www.facebook.com/codingclubiitg/">Coding Club IITG</a></h6>
                         </div>
+                        <a class="btn btn-primary" style="border-top-right-radius: 0;border-top-left-radius: 0" href="{% url "social:begin" "azuread-tenant-oauth2" %}?next={{ next }}">Login with Office 365</a>
                     </div>
                 </div>
                 <div class="col"></div>

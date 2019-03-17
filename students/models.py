@@ -104,7 +104,7 @@ class Profile(models.Model):
     bio = models.TextField(max_length=1000)
 
     def __str__(self):
-        return self.user.first_name+" "+self.user.last_name
+        return self.full_name
 
 
 class Testimonial(models.Model):
@@ -142,4 +142,4 @@ class ProfileAnswers (models.Model):
     answer = models.TextField(max_length = 1000)
 
     def __str__(self):
-        return self.question.question+" "+self.profile.user.first_name+" "+self.profile.user.last_name
+        return self.question.question+" "+self.profile.full_name
