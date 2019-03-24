@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-from .keys import SECRET_KEY, SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_KEY, SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_SECRET, SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_TENANT_ID
+from .keys import SECRET_KEY, SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_KEY, SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_SECRET, SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_TENANT_ID, RDS_DB_NAME, RDS_HOSTNAME, RDS_PASSWORD, RDS_PORT, RDS_USERNAME, PRODUCTION
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,8 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+if PRODUCTION:
+    DEBUG=False
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost','yearbook.sail-iitg.org','ec2-13-233-155-102.ap-south-1.compute.amazonaws.com']
 
 
 # Application definition
@@ -84,12 +86,24 @@ WSGI_APPLICATION = 'yearbook.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if PRODUCTION:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': RDS_DB_NAME,
+            'USER': RDS_USERNAME,
+            'PASSWORD': RDS_PASSWORD,
+            'HOST': RDS_HOSTNAME,
+            'PORT': RDS_PORT,
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 
 # Password validation

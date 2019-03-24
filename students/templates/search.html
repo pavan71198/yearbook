@@ -13,7 +13,7 @@
                         <div class="row no-gutters">
                             <div class="col-5">
                                 <a href="{% url 'profile' profile.user.username %}">
-                                    <img class="card-img" src="{% static 'no-profile-pic.png' %}" alt="Profile Picture">
+                                    <img class="card-img img-fluid " src="{{ profile.profile_pic.url }}" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" alt="Profile Picture">
                                 </a>
                             </div>
                             <div class="col-7">

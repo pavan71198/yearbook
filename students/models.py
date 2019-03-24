@@ -36,7 +36,6 @@ class Profile(models.Model):
     ma = '23'
     ph = '21'
     rt = '54'
-    ch = '22'
     hss = '41'
     enc = '51'
     env = '52'
@@ -44,24 +43,23 @@ class Profile(models.Model):
     lst = '55'
 
     department_values = (
-        (cse, 'CSE'),
-        (ece, 'ECE'),
-        (me, 'ME'),
-        (ce, 'CE'),
-        (dd, 'DD'),
-        (bsbe, 'BSBE'),
-        (cl, 'CL'),
-        (cst, 'CST'),
-        (eee, 'EEE'),
-        (ma, 'MA'),
-        (ph, 'PH'),
-        (rt, 'RT'),
-        (ch, 'CH'),
-        (hss, 'HSS'),
-        (enc, 'ENC'),
-        (env, 'ENV'),
-        (nt, 'NT'),
-        (lst, 'LST'),
+        (cse, 'Computer Science & Engineering'),
+        (ece, 'Electronics & Communication Engineering'),
+        (me, 'Mechanical Engineering'),
+        (ce, 'Civil Engineering'),
+        (dd, 'Design'),
+        (bsbe, 'Biosciences & Bioengineering'),
+        (cl, 'Chemical Engineering'),
+        (cst, 'Chemical Science & Technology'),
+        (eee, 'Electronics & Electrical Engineering'),
+        (ma, 'Mathematics & Computing'),
+        (ph, 'Engineering Physics'),
+        (rt, 'Rural Technology'),
+        (hss, 'Humanities & Social Sciences'),
+        (enc, 'Centre for Energy'),
+        (env, 'Centre for Environment'),
+        (nt, 'Centre for Nanotechnology'),
+        (lst, 'Centre for Linguistic Science & Technology'),
     )
     profile_pic = models.ImageField(upload_to='profile_pics/', default='profile_pics/no-profile-pic.png')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
