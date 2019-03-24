@@ -5,24 +5,13 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     btech = '01'
-    mtech = '42'
+    mtech = '41'
     phd = '61'
     msc = '21'
     msr = '43'
     ma = '22'
     bdes = '02'
     mdes = '42'
-
-    program_dict = {
-        btech: 'BTech',
-        mtech: 'MTech',
-        phd: 'PhD',
-        msc: 'MSc',
-        msr: 'MS-R',
-        ma: 'MA',
-        bdes: 'BDes',
-        mdes: 'MDes'
-    }
 
     program_values = (
         (btech, 'BTech'),
@@ -54,27 +43,6 @@ class Profile(models.Model):
     nt = '53'
     lst = '55'
 
-    department_dict = {
-        cse: 'CSE',
-        ece: 'ECE',
-        me: 'ME',
-        ce: 'CE',
-        dd: 'DD',
-        bsbe: 'BSBE',
-        cl: 'CL',
-        cst: 'CST',
-        eee: 'EEE',
-        ma: 'MA',
-        ph: 'PH',
-        rt: 'RT',
-        ch: 'CH',
-        hss: 'HSS',
-        enc: 'ENC',
-        env: 'ENV',
-        nt: 'NT',
-        lst: 'LST'
-    }
-
     department_values = (
         (cse, 'CSE'),
         (ece, 'ECE'),
@@ -95,7 +63,7 @@ class Profile(models.Model):
         (nt, 'NT'),
         (lst, 'LST'),
     )
-
+    profile_pic = models.ImageField(upload_to='profile_pics/', default='profile_pics/no-profile-pic.png')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100)
     rollno = models.IntegerField()
@@ -108,6 +76,7 @@ class Profile(models.Model):
 
 
 class Testimonial(models.Model):
+    favourite = models.BooleanField(default=False)
     given_by = models.ForeignKey(Profile, null=True, on_delete=models.CASCADE, related_name='given_by')
     content = models.TextField(max_length = 1000)
     given_to = models.ForeignKey(Profile, null=True, on_delete=models.CASCADE, related_name='given_to')
@@ -115,11 +84,13 @@ class Testimonial(models.Model):
     def __str__(self):
         return self.given_by.full_name+" -> "+self.given_to.full_name
 
+
 class PollQuestion (models.Model):
     question = models.CharField(max_length=200)
 
     def __str__(self):
         return self.question
+
 
 class PollAnswer (models.Model):
     answer = models.ForeignKey(Profile, null=True, on_delete=models.CASCADE, related_name='voted_to')
@@ -135,6 +106,7 @@ class ProfileQuestion (models.Model):
 
     def __str__(self):
         return self.question
+
 
 class ProfileAnswers (models.Model):
     profile = models.ForeignKey(Profile, null=True, on_delete=models.CASCADE)

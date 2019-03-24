@@ -5,34 +5,14 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row mx-lg-5 mt-4">
-            <div class="col-lg-6">
-                <h3 class="text-center">Testimonials</h3>
-                <div class="container">
-                    {% for testimonial in testimonials %}
-                        <div class="card my-2 mx-lg-3" id="testimonial-{{ testimonial.id }}">
-                            <div class="card-body">
-                                <p class="card-text">{{ testimonial.content | linebreaksbr }}</p>
-                                <p class="float-left">
-                                    <button class="btn btn-primary" onclick="deleteTestimonial({{ testimonial.id }})"><i class="fas fa-trash"></i></button>
-                                </p>
-                                <p class="float-right">
-                                    <a href="{% url 'profile' testimonial.given_by.user.username %}">
-                                        ~ {{ testimonial.given_by.full_name }}
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+            <div class="col-lg-3"></div>
             <div class="col-lg-6">
                 <h3 class="text-center">Polls</h3>
                 <div class="container">
                     {% for question, poll in polls.items %}
-
                         <div class="card my-2 mx-lg-3">
                             <div class="card-header">
-                                <h5>{{ question.0.question }}</h5>
+                                <h5 class="mb-0">{{ question.0.question }}</h5>
                             </div>
                             <div class="card-body">
                                 {% for votes in poll %}
@@ -67,15 +47,17 @@
                                     </div>
                                 {% endfor %}
                             </div>
-                            <a href="#" class="btn btn-primary" style="border-top-left-radius: 0; border-top-right-radius: 0">
-                                Add a Vote
-                            </a>
                         </div>
                     {% endfor %}
                 </div>
             </div>
+            <div class="col-lg-3"></div>
         </div>
     </div>
+{% endblock %}
+
+{% block extrastyles %}
+
 {% endblock %}
 
 {% block extrascripts %}
@@ -89,24 +71,5 @@
                         $(this).css("width", percentage.toString() + "%");
                     });
             });
-        function deleteTestimonial(testimonial_id){
-            $.ajax({
-                type: "POST",
-                url: '/delete_testimonial/',
-                data: {
-                    'testimonial_id': testimonial_id,
-                    'csrfmiddlewaretoken': Cookies.get("csrftoken")
-                },
-                success: function (data) {
-                    if (data.status === "1"){
-                        $("#testimonial-"+testimonial_id.toString()).remove();
-                        alert(data.message);
-                    }
-                    else{
-                        alert(data.error);
-                    }
-                }
-            });
-        }
     </script>
 {% endblock %}

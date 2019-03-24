@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html class="h-100">
 <head>
     <title>{% block title %}{% endblock %}</title>
         {% load static %}
@@ -11,18 +11,34 @@
 {#    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">#}
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     {% block extrastyles %}{% endblock %}
+
+    <!-- UIkit JS -->
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit.min.js"></script>#}
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit-icons.min.js"></script>#}
+    <!-- jQuery JS -->
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="d-flex flex-column h-100">
     {% if logged_in %}
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="{% url 'home' %}">SAIL Yearbook Portal</a>
+            <a class="navbar-brand py-0" href="{% url 'home' %}">
+                <img height="40" src="{% static 'img/sail_logo.png' %}"> SAIL Yearbook
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNavbar">
-                <form class="form-inline my-2 my-lg-0 mr-auto" method="get" action="{% url 'search' %}">
-                    <input class="form-control mr-sm-2" name="key" placeholder="Search for friends">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <form class="form-inline my-2 my-lg-0 mx-auto" method="get" action="{% url 'search' %}">
+                    <div class="input-group">
+                        <input class="form-control" name="key" placeholder="Search for friends" autocomplete="off">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
                 </form>
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -39,14 +55,20 @@
         </nav>
     {% else %}
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="{% url 'home' %}">SAIL Yearbook Portal</a>
+            <a class="navbar-brand py-0" href="{% url 'home' %}">
+                <img height="40" src="{% static 'img/sail_logo.png' %}"> SAIL Yearbook
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <form class="form-inline my-2 my-lg-0 mr-auto" method="get" action="{% url 'search' %}">
-                    <input class="form-control mr-sm-2" name="key" placeholder="Search for friends">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    <div class="input-group">
+                        <input class="form-control" name="key" placeholder="Search for friends" autocomplete="off">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
                 </form>
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -59,16 +81,15 @@
             </div>
         </nav>
     {% endif %}
-    {% block content %}{% endblock %}
-    <!-- UIkit JS -->
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit.min.js"></script>#}
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit-icons.min.js"></script>#}
-    <!-- jQuery JS -->
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <main class="flex-shrink-0 my-2">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="footer mt-auto py-1" style="background-color: #f5f5f5;">
+        <div class="container-fluid">
+            <span class="text-muted float-left">Developed by <a href="https://www.facebook.com/codingclubiitg/" class="d-inline-block pl-0 text-black-50"><img src="{% static 'img/cc_logo.png' %}" height="40">Coding Club, IIT Guwahati</a></span>
+            <span class="text-muted float-right">Presented by <a href="http://iitg.ac.in/sail/index.html" class="d-inline-block pl-0 text-black-50"><img src="{% static 'img/sail_logo.png' %}" height="40">Student Alumni Interaction Linkage (SAIL)</a></span>
+        </div>
+    </footer>
     {% block extrascripts %}{% endblock %}
 </body>
 </html>
