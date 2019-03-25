@@ -32,7 +32,7 @@ if PRODUCTION:
     CSRF_COOKIE_SECURE = True
     SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-ALLOWED_HOSTS = ['localhost','sail-iitg.org']
+ALLOWED_HOSTS = ['localhost','yearbook.sail-iitg.org']
 
 
 # Application definition
