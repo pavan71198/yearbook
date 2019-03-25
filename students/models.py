@@ -68,6 +68,7 @@ class Profile(models.Model):
     program = models.CharField(max_length=2, choices=program_values)
     department = models.CharField(max_length=3, choices=department_values)
     bio = models.TextField(max_length=1000)
+    graduating = models.BooleanField(default=False)
 
     def __str__(self):
         return self.full_name

@@ -50,17 +50,14 @@ def home(request):
                 return render(request, 'admin_home.html', context)
             else:
                 user_profile = Profile.objects.filter(user=user).first()
-                if user_profile.program == "01" and not str(user_profile.rollno)[:2] == "15":
-                    graduating = False
+                if not user_profile.graduating:
                     context = {
-                        'graduating': graduating,
                         'user': user,
                         'user_profile': user_profile,
                         'logged_in': logged_in
                     }
                     return render(request, 'home.html', context)
                 else:
-                    graduating = True
                     testimonials = Testimonial.objects.filter(given_to=user_profile).order_by('-id')
                     for question in poll_questions:
                         answers = PollAnswer.objects.filter(question=question)
@@ -75,7 +72,6 @@ def home(request):
                                 poll_nominees.append(answer.answer)
                         polls[(question, myanswer)] = sorted(poll_nominees, key=nominees_sort_key)
                     context = {
-                        'graduating': graduating,
                         'testimonials': testimonials,
                         'polls': polls,
                         'user': user,
@@ -103,10 +99,8 @@ def profile(request, username):
                 else:
                     myprofile = False
                 profile = Profile.objects.filter(user=profile_user).first()
-                if profile.program == "01" and not str(profile.rollno)[:2] == "15":
-                    graduating = False
+                if not profile.graduating:
                     context = {
-                        'graduating': graduating,
                         'logged_in': True,
                         'user': user,
                         'myprofile': myprofile,
@@ -114,7 +108,6 @@ def profile(request, username):
                     }
                     return render(request, 'profile.html', context)
                 else:
-                    graduating = True
                     testimonials = Testimonial.objects.filter(given_to=profile).order_by('-favourite',Length('content').desc(),'-id')
                     profile_questions =ProfileQuestion.objects.all()
                     profile_answers = ProfileAnswers.objects.filter(profile=profile)
@@ -123,7 +116,6 @@ def profile(request, username):
                     for question in profile_questions:
                         answers[question] = profile_answers.filter(question=question).first()
                     context = {
-                        'graduating': graduating,
                         'logged_in': True,
                         'myprofile': myprofile,
                         'user': user,
@@ -141,15 +133,13 @@ def profile(request, username):
                 if profile_user.is_superuser:
                     return error404(request)
                 profile = Profile.objects.filter(user=profile_user).first()
-                if profile.program == "01" and not str(profile.rollno)[:2] == "15":
-                    graduating = False
+                if not profile.graduating:
                     context = {
                         'logged_in': False,
                         'profile': profile
                     }
                     return render(request, 'profile.html', context)
                 else:
-                    graduating = True
                     testimonials = Testimonial.objects.filter(given_to=profile).order_by('-id')
                     profile_questions = ProfileQuestion.objects.all()
                     profile_answers = ProfileAnswers.objects.filter(profile=profile)
@@ -157,7 +147,6 @@ def profile(request, username):
                     for question in profile_questions:
                         answers[question] = profile_answers.filter(question=question).first()
                     context = {
-                        'graduating': graduating,
                         'logged_in': False,
                         'testimonials': testimonials,
                         'profile': profile,
@@ -177,7 +166,7 @@ def search(request):
             key = request.GET.get("key","")
             json = request.GET.get("json", "")
             if key and key!="":
-                profiles = Profile.objects.filter(user__first_name__contains=key)
+                profiles = Profile.objects.filter(user__first_name__contains=key.upper(), graduating=True)
             else:
                 if json!="1":
                     return HttpResponseRedirect(reverse('home'))
@@ -203,7 +192,7 @@ def search(request):
         else:
             key = request.GET.get("key", "")
             if key and key != "":
-                profiles = Profile.objects.filter(user__first_name__contains=key)
+                profiles = Profile.objects.filter(user__first_name__contains=key.upper(), graduating=True)
             else:
                 return HttpResponseRedirect(reverse('home'))
             more_profiles = False
@@ -341,7 +330,7 @@ def add_testimonial(request, username):
             if given_to == given_by:
                 return JsonResponse({'status': 0, 'error': "You can't write a testimonial for yourself"})
             given_to_profile = Profile.objects.filter(user=given_to).first()
-            if given_to_profile.program=="01" and not str(given_to_profile.rollno)[:2]=="15":
+            if not given_to_profile.graduating:
                 return JsonResponse({'status': 0, 'error': "You can't write a testimonial for non-graduating batch"})
             content = request.POST.get("content","")
             if len(content)<200 and content!="":
@@ -417,7 +406,7 @@ def change_answer(request,username):
         if user==profile_user:
             question_id = request.POST.get("question_id", "-1")
             profile = Profile.objects.filter(user=user).first()
-            if profile.program=="01" and not str(profile.rollno)[:2]=="15":
+            if not profile.graduating:
                 return JsonResponse({'status': 0, 'error': "Non-graduating batch can't answer profile questions"})
             if not question_id.isdecimal():
                 return JsonResponse({'status': 0, 'error': "Question doesn't exist"})
@@ -449,7 +438,7 @@ def add_vote(request):
     else:
         user = User.objects.filter(username=request.user.username).first()
         user_profile = Profile.objects.filter(user=user).first()
-        if user_profile.program == "01" and not str(user_profile.rollno)[:2] == "15":
+        if not user_profile.graduating:
             return JsonResponse({'status': 0, 'error': "Non-graduating batch can't vote for polls"})
         vote_username = request.POST.get('voting_to',"")
         vote_user = User.objects.filter(username=vote_username).first()

@@ -62,7 +62,7 @@
                               submitting = false;
                               if (data.status === 1) {
                                   alert(data.message);
-                                  location.reload();
+                                  location.reload(true);
                               } else {
                                   alert(data.error + '\nPlease provide an image which is larger than 500x500\nUse JPEG or PNG format');
                               }
