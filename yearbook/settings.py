@@ -27,7 +27,7 @@ DEBUG = True
 if PRODUCTION:
     DEBUG=False
 
-ALLOWED_HOSTS = ['localhost','yearbook.sail-iitg.org','ec2-13-233-155-102.ap-south-1.compute.amazonaws.com']
+ALLOWED_HOSTS = ['localhost','sail-iitg.org/yearbook','ec2-13-233-155-102.ap-south-1.compute.amazonaws.com/yearbook']
 
 
 # Application definition
