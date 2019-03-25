@@ -20,6 +20,7 @@ sys.path.append('/var/www/vhosts/yearbook')
 sys.path.append('/var/www/vhosts/yearbook/venv/lib/python3.6/site-packages')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "yearbook.settings")
+os.environ['HTTPS'] = "on"
 
 try:
     application = get_wsgi_application()

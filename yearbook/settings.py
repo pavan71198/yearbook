@@ -26,8 +26,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = True
 if PRODUCTION:
     DEBUG=False
+    os.environ['wsgi.url_scheme'] = 'https'
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-ALLOWED_HOSTS = ['localhost','sail-iitg.org','ec2-13-233-155-102.ap-south-1.compute.amazonaws.com/yearbook']
+ALLOWED_HOSTS = ['localhost','sail-iitg.org']
 
 
 # Application definition
