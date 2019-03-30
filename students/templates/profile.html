@@ -8,7 +8,7 @@
             {% if profile.graduating %}
                 <div class="col-lg-3 col-md-12">
                     <div class="container">
-                        <div class="card">
+                        <div class="card shadow">
                             <img class="card-img-top" width="100%" src="{{ profile.profile_pic.url }}" alt="Profile Picture"/>
                             <div class="card-body">
                                 <h5 class="card-title"><b>{{ profile.full_name }}</b></h5>
@@ -36,7 +36,7 @@
                 <div class="col-lg-4 col-md-12">
                     <div class="container">
                         {% for question,answer in answers.items %}
-                        <div class="card my-2 mx-lg-3">
+                        <div class="card shadow my-2 mx-lg-3">
                             <div class="card-header">
                                 <h6 class="mb-0">{{ question.question }}</h6>
                             </div>
@@ -107,7 +107,7 @@
                             <a class="btn btn-primary" style="width: 100%;" href="{% url 'login' %}?next={% url 'profile' profile.user.username %}">Login to add Testimonial</a>
                         {% endif %}
                         {% for testimonial in testimonials %}
-                            <div class="card my-2 mx-lg-3" id="testimonial-{{ testimonial.id }}">
+                            <div class="card shadow my-2 mx-lg-3" id="testimonial-{{ testimonial.id }}">
                                 <div class="card-body">
                                     <p class="card-text">
                                         {{ testimonial.content | linebreaksbr }}
@@ -141,7 +141,7 @@
                 <div class="col-lg-4"></div>
                 <div class="col-lg-4 col-md-12">
                     <div class="container">
-                        <div class="card">
+                        <div class="card shadow">
                             <img class="card-img-top" width="100%" src="{{ profile.profile_pic.url }}" alt="Profile Picture"/>
                             <div class="card-body">
                                 <h5 class="card-title"><b>{{ profile.full_name }}</b></h5>

@@ -9,7 +9,7 @@
         <div class="row">
             {% for profile in profiles %}
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 my-2">
-                    <div class="card" style="display: inline-block; width: 100%;">
+                    <div class="card shadow" style="display: inline-block; width: 100%;">
                         <div class="row no-gutters">
                             <div class="col-5">
                                 <a href="{% url 'profile' profile.user.username %}">
