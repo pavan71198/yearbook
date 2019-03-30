@@ -12,6 +12,7 @@ class Profile(models.Model):
     ma = '22'
     bdes = '02'
     mdes = '42'
+    error = '00'
 
     program_values = (
         (btech, 'BTech'),
@@ -21,7 +22,8 @@ class Profile(models.Model):
         (msr, 'MS-R'),
         (ma, 'MA'),
         (bdes, 'BDes'),
-        (mdes, 'MDes')
+        (mdes, 'MDes'),
+        (error, 'Error')
     )
 
     cse = '01'
@@ -60,6 +62,7 @@ class Profile(models.Model):
         (env, 'Centre for Environment'),
         (nt, 'Centre for Nanotechnology'),
         (lst, 'Centre for Linguistic Science & Technology'),
+        (error, 'Error')
     )
     profile_pic = models.ImageField(upload_to='profile_pics/', default='profile_pics/no-profile-pic.png')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
