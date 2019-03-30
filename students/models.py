@@ -34,7 +34,7 @@ class Profile(models.Model):
     bsbe = '06'
     cl = '07'
     cst = '22'
-    eee = '10'
+    eee = '08'
     ma = '23'
     ph = '21'
     rt = '54'
