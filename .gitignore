@@ -5,3 +5,4 @@ venv/
 **/__pycache__
 yearbook/keys.py
 /media/profile_pics/*
+.DS_STORE
