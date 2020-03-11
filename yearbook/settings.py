@@ -168,6 +168,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+
+if PRODUCTION:
+    MEDIA_ROOT = os.path.join('/var/www/yearbook/','media')
+    STATIC_ROOT = os.path.join('/var/www/yearbook/','static')
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+    STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
