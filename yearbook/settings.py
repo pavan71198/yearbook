@@ -32,7 +32,7 @@ if PRODUCTION:
     CSRF_COOKIE_SECURE = True
     SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-ALLOWED_HOSTS = ['localhost','yearbook.sail-iitg.org']
+ALLOWED_HOSTS = ['localhost','172.17.1.128','www.iitg.ac.in']
 
 
 # Application definition
@@ -146,8 +146,8 @@ SOCIAL_AUTH_AZUREAD_OAUTH2_RESOURCE = 'https://graph.microsoft.com'
 GET_ALL_EXTRA_DATA = True
 
 LOGIN_URL = '/login/'
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/yearbook'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/yearbook'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -166,8 +166,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
+STATIC_URL = '/yearbook/static/'
+MEDIA_URL = '/yearbook/media/'
 
 if PRODUCTION:
     MEDIA_ROOT = os.path.join('/var/www/yearbook/','media')
