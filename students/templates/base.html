@@ -24,9 +24,34 @@
     <script src="{% static 'js/bootstrap-4.4.1.min.js' %}"></script>
 
 </head>
+<style >
+a {
+    color:teal;
+}
+body {
+ padding-top:50px;
+}
+.panel-body .btn:not(.btn-block) {
+ width:120px;margin-bottom:5px;
+}
+.btn-custom
+{
+background-color: #3aafa9;
+color:#FFF;
+border-color: #3aafa9;
+}
+.nav-link {
+color: rgba(255, 255, 255, 0.99);
+}
+.btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom.active, .open .dropdown-toggle.btn-custom {
+background-color: #21E0EE;
+color:#FFF;
+border-color: #21E0EE;
+}
+</style>
 <body class="d-flex flex-column h-100" style="font-family: 'Nunito', sans-serif;">
     {% if logged_in %}
-        <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light py-0">
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark py-0">
             <a class="navbar-brand" href="{% url 'home' %}" style="font-size:x-large">
                 <img height="40" src="{% static 'img/sail_logo.png' %}"> SAIL Yearbook
             </a>
@@ -36,27 +61,34 @@
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <form class="form-inline my-2 my-lg-0 mx-auto" method="get" action="{% url 'search' %}">
                     <div class="input-group">
-                        <input class="form-control" name="key" placeholder="Search for friends" autocomplete="off">
+                        <input style="font-family: 'Nunito', sans-serif;" class="form-control" name="key" placeholder="Search for friends" autocomplete="off">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                            <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search" style="color: #3aafa9;"></i></button>
                         </div>
                     </div>
                 </form>
                 <ul class="navbar-nav">
+                
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                        <a style="color: #FFF;" class="nav-link" href="{% url 'home' %}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' user.username %}">My Profile</a>
+                        <a style="color: #FFF;" class="nav-link" href="{% url 'polls' %}">Polls</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        <a style="color: #FFF;" class="nav-link" href="{% url 'write_testimonial' %}">Write Testimonials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a style="color: #FFF;" class="nav-link" href="{% url 'profile' user.username %}">My Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a style="color: #FFF;" class="nav-link" href="{% url 'logout' %}">Logout</a>
                     </li>
                 </ul>
             </div>
         </nav>
     {% else %}
-        <nav class="navbar-nav fixed-top navbar-expand-lg navbar-light bg-light py-0">
+        <nav class="navbar-nav fixed-top navbar-expand-lg navbar-dark bg-dark py-0">
             <a class="navbar-brand" href="{% url 'home' %}">
                 <img height="40" src="{% static 'img/sail_logo.png' %}"> SAIL Yearbook
             </a>
@@ -68,7 +100,7 @@
                     <div class="input-group">
                         <input class="form-control" name="key" placeholder="Search for friends" autocomplete="off">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                            <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
                 </form>
@@ -86,10 +118,10 @@
     <main class="flex-shrink-0 mt-5">
         {% block content %}{% endblock %}
     </main>
-    <footer class="footer mt-auto py-1" style="background-color: #f5f5f5;">
+    <footer class="footer mt-auto py-1 bg-dark">
         <div class="container-fluid">
-            <span class="text-muted float-left">Developed by <a href="https://www.facebook.com/codingclubiitg/" class="d-inline-block pl-0 text-black-50"><img src="{% static 'img/cc_logo.png' %}" height="40">Coding Club, IIT Guwahati</a></span>
-            <span class="text-muted float-right">Presented by <a href="http://iitg.ac.in/sail/index.html" class="d-inline-block pl-0 text-black-50"><img src="{% static 'img/sail_logo.png' %}" height="40">Student Alumni Interaction Linkage (SAIL)</a></span>
+            <span class="text-muted float-right">
+                <a class="d-inline-block pl-0" style="color:white;" href="{% url 'team' %}"> Developed by Coding Club <img height="40" src="{% static 'img/cc_logo.png' %}"> and SAIL <img height="40" src="{% static 'img/sail_logo.png' %}"></a></span>
         </div>
     </footer>
     {% block extrascripts %}{% endblock %}

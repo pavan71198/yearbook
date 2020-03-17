@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %} Profile Search | SAIL Year Book Portal {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="col-lg-6 col-md-12" style="margin-left:auto;margin-right:auto;">
+	<div class="container">
+		<div class="card">
+			<div class="card-header">
+				<input type="text" id="search-input" onkeyup="searchFunction()" placeholder="Search for names.." title="Type in a name"
+					style="width:100%;height:2.5em;opacity:0.9;">
+			</div>
+			<div class="card-body">
+				<div class="d-flex justify-content-around flex-wrap" id="profile-links-flex">
+						{% for profile in profiles %}
+							<a href="{% url 'profile' profile.user.username %}" class="m-2 btn btn-dark"
+							style="text-decoration:none; ">{{ profile.full_name }}</a>
+						{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block extrascripts %}
+
+<script>
+		function searchFunction() {
+			var input = document.getElementById("search-input");
+			var filter = input.value.toUpperCase();
+			var profile_flex = document.getElementById("profile-links-flex");
+			var profile_buttons = profile_flex.getElementsByTagName("a");
+			for (i = 0; i < profile_buttons.length; i++) {
+				var profile_button = profile_buttons[i];
+				if (profile_button) {
+					var profile_name = profile_button.textContent || profile_button.innerText;
+					if (profile_name.toUpperCase().indexOf(filter) > -1) {
+						profile_button.style.display = "";
+					}
+					else {
+						profile_button.style.display = "none";
+					}
+				}
+			}
+		}
+</script>
+{% endblock %}

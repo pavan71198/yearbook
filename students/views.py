@@ -7,6 +7,7 @@ from .models import Testimonial, PollAnswer, PollQuestion, ProfileAnswers, Profi
 from django.db.models.functions import Length
 from PIL import Image
 import os
+import re
 from yearbook.settings import BASE_DIR, MEDIA_ROOT, POLL_STOP, PORTAL_STOP
 
 # Create your views here.
@@ -20,7 +21,7 @@ def votes_sort_key(item):
 def nominees_sort_key(item):
     return item.full_name
 
-
+@login_required
 def home(request):
     if request.method == 'GET':
         if request.user and not request.user.is_anonymous:
@@ -59,21 +60,8 @@ def home(request):
                     return render(request, 'home.html', context)
                 else:
                     testimonials = Testimonial.objects.filter(given_to=user_profile).order_by('-id')
-                    for question in poll_questions:
-                        answers = PollAnswer.objects.filter(question=question)
-                        myanswer = answers.filter(voted_by=user_profile).first()
-                        if myanswer:
-                            myanswer = myanswer.answer
-                        else:
-                            myanswer = None
-                        poll_nominees = []
-                        for answer in answers:
-                            if answer.answer not in poll_nominees:
-                                poll_nominees.append(answer.answer)
-                        polls[(question, myanswer)] = sorted(poll_nominees, key=nominees_sort_key)
                     context = {
                         'testimonials': testimonials,
-                        'polls': polls,
                         'user': user,
                         'user_profile': user_profile,
                         'logged_in': logged_in
@@ -84,7 +72,7 @@ def home(request):
     else:
         return error404(request)
 
-
+@login_required
 def profile(request, username):
     if request.method == 'GET':
         if request.user and not request.user.is_anonymous:
@@ -158,7 +146,7 @@ def profile(request, username):
     else:
         return error404(request)
 
-
+@login_required
 def search(request):
     if request.method == 'GET':
         if request.user and not request.user.is_anonymous:
@@ -218,7 +206,7 @@ def login(request):
             }
             return render(request, 'login.html', context)
         else:
-            next = request.GET.get('next',"/")
+            next = request.GET.get('next',"/yearbook")
             context = {
                 'logged_in': False,
                 'next': next
@@ -473,10 +461,10 @@ def add_vote(request):
             if poll_answer:
                 poll_answer.answer = Profile.objects.filter(user=vote_user).first()
                 poll_answer.save()
-                return HttpResponseRedirect(reverse('home'))
+                return HttpResponseRedirect(reverse('polls'))
             else:
                 PollAnswer.objects.create(voted_by=user_profile, question=poll_question, answer=Profile.objects.filter(user=vote_user).first())
-                return HttpResponseRedirect(reverse('home'))
+                return HttpResponseRedirect(reverse('polls'))
         else:
             return JsonResponse({'status': 0, 'error': "Sorry, the polls have been freezed."})
 
@@ -492,3 +480,109 @@ def error404(request):
     else:
         return render(request, '404.html')
 
+@login_required
+def polls(request):
+    if request.method == 'GET':
+        if request.user and not request.user.is_anonymous:
+            logged_in = True
+        else:
+            logged_in = False
+        if logged_in:
+            user = User.objects.filter(username=request.user.username).first()
+            poll_questions = PollQuestion.objects.all()
+            polls = {}
+            if user.is_superuser:
+                for question in poll_questions:
+                    answers = PollAnswer.objects.filter(question=question)
+                    answers_count = answers.count()
+                    poll_dict = {}
+                    for answer in answers:
+                        if answer.answer in poll_dict.keys():
+                            poll_dict[answer.answer].append(answer.voted_by)
+                        else:
+                            poll_dict[answer.answer] = [answer.voted_by]
+                    polls[(question, answers_count)] = sorted(poll_dict.items(), key=votes_sort_key, reverse=True)
+                context = {
+                    'polls': polls,
+                    'user': user,
+                    'logged_in': logged_in
+                }
+                return render(request, 'admin_home.html', context)
+            else:
+                user_profile = Profile.objects.filter(user=user).first()
+                if not user_profile.graduating:
+                    context = {
+                        'user': user,
+                        'user_profile': user_profile,
+                        'logged_in': logged_in
+                    }
+                    return render(request, 'polls.html', context)
+                else:
+                    testimonials = Testimonial.objects.filter(given_to=user_profile).order_by('-id')
+                    for question in poll_questions:
+                        answers = PollAnswer.objects.filter(question=question)
+                        myanswer = answers.filter(voted_by=user_profile).first()
+                        if myanswer:
+                            myanswer = myanswer.answer
+                        else:
+                            myanswer = None
+                        poll_nominees = []
+                        for answer in answers:
+                            if answer.answer not in poll_nominees:
+                                poll_nominees.append(answer.answer)
+                        polls[(question, myanswer)] = sorted(poll_nominees, key=nominees_sort_key)
+                    context = {
+                        'testimonials': testimonials,
+                        'polls': polls,
+                        'user': user,
+                        'user_profile': user_profile,
+                        'logged_in': logged_in
+                    }
+                    return render(request, 'polls.html', context)
+        else:
+            return HttpResponseRedirect(reverse('login'))
+    else:
+        return error404(request)
+
+@login_required
+def write_testimonial(request):
+    if request.method == 'GET':
+        if request.user and not request.user.is_anonymous:
+            logged_in = True
+        else:
+            logged_in = False
+        if logged_in:
+            user = User.objects.filter(username=request.user.username).first()
+            profiles = Profile.objects.filter(graduating=True)
+            context = {
+                'user': user,
+                'profiles': profiles,
+                'logged_in': logged_in
+            }
+            return render(request, 'write_testimonial.html', context)
+        else:
+            return HttpResponseRedirect(reverse('login'))
+    else:
+        return error404(request)
+
+
+def team(request):
+    if request.method == 'GET':
+        if request.user and not request.user.is_anonymous:
+            logged_in = True
+        else:
+            logged_in = False
+        if logged_in:
+            user = User.objects.filter(username=request.user.username).first()
+            context = {
+                'user': user,
+                'logged_in': logged_in
+            }
+            return render(request, 'team.html', context)
+        else:
+            context = {
+                'logged_in': logged_in
+            }
+            return render(request, 'team.html', context)
+    else:
+        return error404(request)

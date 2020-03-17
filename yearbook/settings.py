@@ -145,7 +145,7 @@ SOCIAL_AUTH_PIPELINE = (
 SOCIAL_AUTH_AZUREAD_OAUTH2_RESOURCE = 'https://graph.microsoft.com'
 GET_ALL_EXTRA_DATA = True
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/yearbook/login/'
 LOGOUT_REDIRECT_URL = '/yearbook'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/yearbook'
 
