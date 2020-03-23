@@ -100,7 +100,10 @@ class PollAnswer (models.Model):
     voted_by = models.ForeignKey(Profile, null=True, on_delete=models.CASCADE, related_name='voted_by')
 
     def __str__(self):
-        return self.question.question+" "+self.voted_by.full_name+" -> "+self.answer.full_name
+        if self.question:
+            return self.question.question+" "+self.voted_by.full_name+" -> "+self.answer.full_name
+        else:
+            return "Deleted Poll "+self.voted_by.full_name+" -> "+self.answer.full_name
 
 
 class ProfileQuestion (models.Model):
@@ -116,4 +119,7 @@ class ProfileAnswers (models.Model):
     answer = models.TextField(max_length = 1000)
 
     def __str__(self):
-        return self.question.question+" "+self.profile.full_name
+        if self.question:
+            return self.question.question+" "+self.profile.full_name
+        else:
+            return "Deleted Profile Question "+self.profile.full_name
