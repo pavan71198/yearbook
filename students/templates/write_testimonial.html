@@ -17,8 +17,10 @@
 			<div class="card-body">
 				<div class="d-flex justify-content-around flex-wrap" id="profile-links-flex">
 						{% for profile in profiles %}
-							<a href="{% url 'profile' profile.user.username %}" class="m-2 btn btn-dark"
-							style="text-decoration:none; ">{{ profile.full_name }}</a>
+							<a href="{% url 'profile' profile.user.username %}" class="m-2 btn btn-dark profile-link-button"
+							style="text-decoration:none; ">{{ profile.full_name }} <p class="profile-link-text d-none" style="text-decoration:none;">
+							{{ profile.full_name }} {{ profile.user.first_name }}</p> </a>
+							
 						{% endfor %}
 				</div>
 			</div>
@@ -38,7 +40,7 @@
 			for (i = 0; i < profile_buttons.length; i++) {
 				var profile_button = profile_buttons[i];
 				if (profile_button) {
-					var profile_name = profile_button.textContent || profile_button.innerText;
+					var profile_name = profile_button.getElementsByTagName("p")[0].innerText;
 					if (profile_name.toUpperCase().indexOf(filter) > -1) {
 						profile_button.style.display = "";
 					}

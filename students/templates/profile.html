@@ -62,6 +62,7 @@
                                                 <div class="modal-body">
                                                     <textarea id="profile-answer-{{ question.id }}" autocomplete="off" class="form-control" rows="5" name="content" placeholder="Write your answer here">{% if answer %}{{answer.answer}}{% endif %}</textarea>
                                                     <br>
+                                                    {% comment %} <span id="profile-answer-{{ question.id }}-char-count" class="badge badge-primary float-right my-1">0/500</span> {% endcomment %}
                                                     <button class="btn btn-dark" style="width: 100%;" onclick="changeAnswer({{ question.id }})">
                                                         {% if answer %} Change {% else %} Add {% endif %} answer
                                                     </button>
@@ -95,6 +96,7 @@
                                             <div class="modal-body">
                                                 <textarea id="add-testimonial-form-content" autocomplete="off" class="form-control" rows="5" name="content" placeholder="Write your testimonial for {{ profile.full_name }} here">{% if mytestimonial %}{{mytestimonial.content}}{% endif %}</textarea>
                                                 <br>
+                                                {% comment %} <span id="add-testimonial-char-count" class="badge badge-primary float-right my-1">0/500</span> {% endcomment %}
                                                 <button class="btn btn-dark" style="width: 100%;" onclick="addTestimonial()">
                                                     {% if mytestimonial %} Edit {% else %} Add {% endif %}testimonial
                                                 </button>

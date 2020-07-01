@@ -245,7 +245,7 @@ def edit_profile(request):
             else:
                 errors[0] = 1
             new_bio = request.POST.get("bio","")
-            if len(new_bio)<500:
+            if len(new_bio)<=500:
                 profile.bio = new_bio
             else:
                 errors[1] = 1
@@ -328,7 +328,7 @@ def add_testimonial(request, username):
                 if not given_to_profile.graduating:
                     return JsonResponse({'status': 0, 'error': "You can't write a testimonial for non-graduating batch"})
                 content = request.POST.get("content","")
-                if len(content)<500 and content!="":
+                if len(content)<=500 and content!="":
                     old_testimonial = Testimonial.objects.filter(given_to=given_to_profile, given_by=given_by_profile).first()
                     if old_testimonial:
                         old_testimonial.content = content
@@ -417,7 +417,7 @@ def change_answer(request,username):
                 new_answer = request.POST.get("answer", -1)
                 if new_answer == -1:
                     return JsonResponse({'status': 0, 'error': "Answer size out of bounds"})
-                if len(new_answer) < 500:
+                if len(new_answer) <= 500:
                     question = ProfileQuestion.objects.filter(id=int(question_id)).first()
                     if question:
                         answer = ProfileAnswers.objects.filter(question=question, profile=profile).first()
