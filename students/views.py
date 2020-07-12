@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Testimonial, PollAnswer, PollQuestion, ProfileAnswers, ProfileQuestion, Profile
 from django.db.models.functions import Length
-from PIL import Image
+from PIL import Image, ImageOps
 import os
 import re
 from yearbook.settings import BASE_DIR, MEDIA_ROOT, POLL_STOP, PORTAL_STOP
@@ -295,12 +295,12 @@ def upload_profile_pic(request):
             try:
                 uploaded_pic = request.FILES["profile_pic"]
                 image = Image.open(uploaded_pic)
+                image = ImageOps.exif_transpose(image)
                 cropped_image = image.crop((x, y, width + x, height + y))
                 resized_image = cropped_image.resize((500, 500), Image.ANTIALIAS)
             except:
                 return JsonResponse({'status': 0, 'error': "Error processing image\nPlease provide an image which is larger than 500x500\nUse JPEG or PNG format"})
             extension = uploaded_pic.name.split('.')[-1]
-            print(extension)
             profile_pic_path = os.path.join(profile_pic_upload_folder,user.username+'.'+extension.lower())
             resized_image.save(profile_pic_path)
             profile.profile_pic = os.path.join(Profile.profile_pic.field.upload_to, user.username+'.'+extension.lower())
