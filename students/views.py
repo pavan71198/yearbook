@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRe
 from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Testimonial, PollAnswer, PollQuestion, ProfileAnswers, ProfileQuestion, Profile
-from django.db.models.functions import Length
+from django.db.models.functions import Length, Lower
 from PIL import Image, ImageOps
 import os
 import re
@@ -30,7 +30,7 @@ def home(request):
             logged_in = False
         if logged_in:
             user = User.objects.filter(username=request.user.username).first()
-            poll_questions = PollQuestion.objects.all()
+            poll_questions = PollQuestion.objects.all().order_by("question")
             polls = {}
             if user.is_superuser:
                 for question in poll_questions:
@@ -401,12 +401,12 @@ def favourite_testimonial(request):
                         testimonial.save()
                         return JsonResponse({'status': 1, 'message': "Testimonial removed from favourites"})
                     else:
-                        if Testimonial.objects.filter(given_to=user_profile, favourite=True).count()<4:
+                        if Testimonial.objects.filter(given_to=user_profile, favourite=True).count()<5:
                             testimonial.favourite = True
                             testimonial.save()
                             return JsonResponse({'status': 1, 'message': "Testimonial added to favourites"})
                         else:
-                            return JsonResponse({'status': 0, 'error': "You can have only 4 favourite testimonials"})
+                            return JsonResponse({'status': 0, 'error': "You can have only 5 favourite testimonials"})
                 else:
                     return JsonResponse({'status': 0, 'error': "You are not authorised to favourite this testimonial"})
             else:
@@ -504,7 +504,7 @@ def polls(request):
             logged_in = False
         if logged_in:
             user = User.objects.filter(username=request.user.username).first()
-            poll_questions = PollQuestion.objects.all()
+            poll_questions = PollQuestion.objects.all().order_by("question")
             polls = {}
             if user.is_superuser:
                 for question in poll_questions:
@@ -566,9 +566,9 @@ def write_testimonial(request):
             logged_in = False
         if logged_in:
             user = User.objects.filter(username=request.user.username).first()
-            profiles = Profile.objects.filter(graduating=True)
+            profiles = Profile.objects.filter(graduating=True).order_by(Lower("full_name"))
             user_profile = Profile.objects.filter(user=user).first()
-            testimonials = Testimonial.objects.filter(given_by=user_profile)
+            testimonials = Testimonial.objects.filter(given_by=user_profile).order_by('-id')
             context = {
                 'user': user,
                 'profiles': profiles,
