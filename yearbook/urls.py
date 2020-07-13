@@ -42,4 +42,5 @@ urlpatterns = [
     path('<username>/change_answer/', student_views.change_answer, name='change_answer')
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-urlpatterns = [ path('yearbook/', include(urlpatterns)) ]
+if settings.PRODUCTION:
+    urlpatterns = [ path('yearbook/', include(urlpatterns)) ]

@@ -144,9 +144,14 @@ SOCIAL_AUTH_PIPELINE = (
 SOCIAL_AUTH_AZUREAD_OAUTH2_RESOURCE = 'https://graph.microsoft.com'
 GET_ALL_EXTRA_DATA = True
 
-LOGIN_URL = '/yearbook/login/'
-LOGOUT_REDIRECT_URL = '/yearbook'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/yearbook'
+if PRODUCTION:
+    LOGIN_URL = '/yearbook/login/'
+    LOGOUT_REDIRECT_URL = '/yearbook'
+    SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/yearbook'
+else:
+    LOGIN_URL = '/login/'
+    LOGOUT_REDIRECT_URL = '/'
+    SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -165,8 +170,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/yearbook/static/'
-MEDIA_URL = '/yearbook/media/'
+if PRODUCTION:
+    STATIC_URL = '/yearbook/static/'
+    MEDIA_URL = '/yearbook/media/'
+else:
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
 
 if PRODUCTION:
     MEDIA_ROOT = os.path.join('/var/www/yearbook/','media')

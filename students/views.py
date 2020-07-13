@@ -8,7 +8,7 @@ from django.db.models.functions import Length
 from PIL import Image, ImageOps
 import os
 import re
-from yearbook.settings import BASE_DIR, MEDIA_ROOT, POLL_STOP, PORTAL_STOP
+from yearbook.settings import BASE_DIR, MEDIA_ROOT, POLL_STOP, PORTAL_STOP, PRODUCTION
 
 # Create your views here.
 
@@ -57,11 +57,24 @@ def home(request):
                         'user_profile': user_profile,
                         'logged_in': logged_in
                     }
-                    return render(request, 'home.html', context)
+                    return render(request, 'polls.html', context)
                 else:
                     testimonials = Testimonial.objects.filter(given_to=user_profile).order_by('-id')
+                    for question in poll_questions:
+                        answers = PollAnswer.objects.filter(question=question)
+                        myanswer = answers.filter(voted_by=user_profile).first()
+                        if myanswer:
+                            myanswer = myanswer.answer
+                        else:
+                            myanswer = None
+                        poll_nominees = []
+                        for answer in answers:
+                            if answer.answer not in poll_nominees:
+                                poll_nominees.append(answer.answer)
+                        polls[(question, myanswer)] = sorted(poll_nominees, key=nominees_sort_key)
                     context = {
                         'testimonials': testimonials,
+                        'polls': polls,
                         'user': user,
                         'user_profile': user_profile,
                         'logged_in': logged_in
@@ -203,13 +216,15 @@ def login(request):
             context = {
                 'logged_in': True,
                 'user': user,
+                'production': PRODUCTION
             }
             return render(request, 'login.html', context)
         else:
             next = request.GET.get('next',"/yearbook")
             context = {
                 'logged_in': False,
-                'next': next
+                'next': next,
+                'production': PRODUCTION
             }
             return render(request, 'login.html', context)
     else:
@@ -518,7 +533,6 @@ def polls(request):
                     }
                     return render(request, 'polls.html', context)
                 else:
-                    testimonials = Testimonial.objects.filter(given_to=user_profile).order_by('-id')
                     for question in poll_questions:
                         answers = PollAnswer.objects.filter(question=question)
                         myanswer = answers.filter(voted_by=user_profile).first()
@@ -532,7 +546,6 @@ def polls(request):
                                 poll_nominees.append(answer.answer)
                         polls[(question, myanswer)] = sorted(poll_nominees, key=nominees_sort_key)
                     context = {
-                        'testimonials': testimonials,
                         'polls': polls,
                         'user': user,
                         'user_profile': user_profile,
@@ -554,10 +567,13 @@ def write_testimonial(request):
         if logged_in:
             user = User.objects.filter(username=request.user.username).first()
             profiles = Profile.objects.filter(graduating=True)
+            user_profile = Profile.objects.filter(user=user).first()
+            testimonials = Testimonial.objects.filter(given_by=user_profile)
             context = {
                 'user': user,
                 'profiles': profiles,
-                'logged_in': logged_in
+                'logged_in': logged_in,
+                'testimonials': testimonials
             }
             return render(request, 'write_testimonial.html', context)
         else:
