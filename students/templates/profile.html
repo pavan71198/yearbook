@@ -41,7 +41,7 @@
                                 <h6 class="mb-0">{{ question.question }}</h6>
                             </div>
                             <div class="card-body">
-                                <div class="card-text">
+                                <div class="card-text text-justify">
                                     {% if answer %}{{ answer.answer | linebreaksbr}}{% endif %}
                                 </div>
                                 {% if myprofile %}
@@ -113,7 +113,7 @@
                         {% for testimonial in testimonials %}
                             <div class="card shadow my-2 mx-lg-3" id="testimonial-{{ testimonial.id }}">
                                 <div class="card-body">
-                                    <p class="card-text">
+                                    <p class="card-text text-justify">
                                         {{ testimonial.content | linebreaksbr }}
                                     </p>
                                     <p class="float-left my-0">
@@ -127,8 +127,12 @@
                                                     <i style="color: #3aafa9;" class="far fa-star"></i>
                                                 </button>
                                             {% endif %}
+                                                <button class="btn btn-dark" onclick="deleteTestimonial({{ testimonial.id }})" data-toggle="tooltip" title="Delete the testimonial from your profile.">
+                                                    <i class="fas fa-trash" style="color: #3aafa9;"></i>
+                                                </button>
                                         {% elif testimonial.given_by.user == user %}
-                                            <button class="btn btn-dark" onclick="deleteTestimonial({{ testimonial.id }})"><i style="color: #3aafa9;" class="fas fa-trash"></i></button>
+                                            <button class="btn btn-dark" data-toggle="modal" data-target="#testimonial-modal"><i style="color: #3aafa9;" class="fas fa-edit"></i></button>
+                                            <button class="btn btn-dark" onclick="deleteTestimonial({{ testimonial.id }})"><i style="color: #3aafa9;" class="fas fa-trash" data-toggle="tooltip" title="Delete the testimonial from your profile."></i></button>
                                         {% endif %}
                                     </p>
                                     <p class="float-right my-0">
@@ -198,7 +202,7 @@
 
         }
         function deleteTestimonial(testimonial_id){
-            if (confirm("Do you want to delete the testimonial ?!")) {
+            if (confirm("Do you want to delete the testimonial ?!\n It can't be recovered once deleted.")) {
                 $.ajax({
                     type: "POST",
                     url: '{% url "delete_testimonial" %}',

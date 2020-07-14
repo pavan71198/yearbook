@@ -42,14 +42,14 @@
                                         {{ testimonial.given_to.full_name }}
                                     </a>
                                 </h5>
-                                <p class="card-text">
+                                <p class="card-text text-justify">
                                     {{ testimonial.content | linebreaksbr }}
                                 </p>
                                 <p class="float-left my-0">
                                     <button class="btn btn-dark" data-toggle="modal" data-target="#testimonial-modal-{{ testimonial.id }}"><i style="color: #3aafa9;" class="fas fa-edit"></i></button>
                                 </p>
                                 <p class="float-right my-0">
-                                    <button class="btn btn-dark" onclick="deleteTestimonial({{ testimonial.id }})"><i style="color: #3aafa9;" class="fas fa-trash"></i></button>
+                                    <button class="btn btn-dark" onclick="deleteTestimonial({{ testimonial.id }})" data-toggle="tooltip" title="Delete the testimonial from your profile."><i style="color: #3aafa9;" class="fas fa-trash"></i></button>
                                 </p>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
 			}
 		}
 		function deleteTestimonial(testimonial_id){
-            if (confirm("Do you want to delete the testimonial ?!")) {
+            if (confirm("Do you want to delete the testimonial ?!\n It can't be recovered once deleted.")) {
                 $.ajax({
                     type: "POST",
                     url: '{% url "delete_testimonial" %}',

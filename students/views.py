@@ -353,7 +353,7 @@ def add_testimonial(request, username):
                         Testimonial.objects.create(given_to=given_to_profile, given_by=given_by_profile, content=content)
                         return JsonResponse({'status':1, 'message':"added"})
                 else:
-                    return JsonResponse({'status':0, 'error':"Testimonial content size out of bounds"})
+                    return JsonResponse({'status':0, 'error':"Testimonial size is "+str(len(content))+" characters, while maximum size allowed is 500 characters."})
             else:
                 return JsonResponse({'status':0, 'error':"User doesn't exist"})
         else:
@@ -446,7 +446,7 @@ def change_answer(request,username):
                     else:
                         return JsonResponse({'status': 0, 'error': "Question doesn't exist"})
                 else:
-                    return JsonResponse({'status': 0, 'error': "Answer size out of bounds"})
+                    return JsonResponse({'status':0, 'error':"Answer size is "+str(len(new_answer))+" characters, while maximum size allowed is 500 characters."})
             else:
                 return JsonResponse({'status': 0, 'error': "You are not authorised to change this"})
         else:
