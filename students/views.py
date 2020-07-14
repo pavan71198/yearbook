@@ -465,6 +465,7 @@ def add_vote(request):
             vote_username = request.POST.get('voting_to',"")
             vote_user = User.objects.filter(username=vote_username).first()
             question_id = request.POST.get('question_id',"-1")
+            origin = request.POST.get('origin',"polls")
             if not question_id.isdecimal():
                 return JsonResponse({"status": 0, "error": "Poll doesn't exist"})
             poll_question = PollQuestion.objects.filter(id=int(question_id)).first()
@@ -472,14 +473,16 @@ def add_vote(request):
                 return JsonResponse({"status": 0, "error": "Poll doesn't exist"})
             if not vote_user:
                 return JsonResponse({"status": 0, "error": "Nominated user doesn't exist"})
+            if origin != "home" and origin != "polls":
+                origin = "polls"
             poll_answer = PollAnswer.objects.filter(voted_by=user_profile, question=poll_question).first()
             if poll_answer:
                 poll_answer.answer = Profile.objects.filter(user=vote_user).first()
                 poll_answer.save()
-                return HttpResponseRedirect(reverse('polls'))
+                return HttpResponseRedirect(reverse(origin))
             else:
                 PollAnswer.objects.create(voted_by=user_profile, question=poll_question, answer=Profile.objects.filter(user=vote_user).first())
-                return HttpResponseRedirect(reverse('polls'))
+                return HttpResponseRedirect(reverse(origin))
         else:
             return JsonResponse({'status': 0, 'error': "Sorry, the polls have been freezed."})
 
