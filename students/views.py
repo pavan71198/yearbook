@@ -401,12 +401,12 @@ def favourite_testimonial(request):
                         testimonial.save()
                         return JsonResponse({'status': 1, 'message': "Testimonial removed from favourites"})
                     else:
-                        if Testimonial.objects.filter(given_to=user_profile, favourite=True).count()<5:
+                        if Testimonial.objects.filter(given_to=user_profile, favourite=True).count()<4:
                             testimonial.favourite = True
                             testimonial.save()
                             return JsonResponse({'status': 1, 'message': "Testimonial added to favourites"})
                         else:
-                            return JsonResponse({'status': 0, 'error': "You can have only 5 favourite testimonials"})
+                            return JsonResponse({'status': 0, 'error': "You can have only 4 favourite testimonials"})
                 else:
                     return JsonResponse({'status': 0, 'error': "You are not authorised to favourite this testimonial"})
             else:
