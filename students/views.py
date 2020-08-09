@@ -44,7 +44,6 @@ def home(request):
                             poll_dict[answer.answer] = [answer.voted_by]
                     polls[(question, answers_count)] = sorted(poll_dict.items(), key=votes_sort_key, reverse=True)
                 context = {
-                    'polls': polls,
                     'user': user,
                     'logged_in': logged_in
                 }
@@ -60,21 +59,20 @@ def home(request):
                     return render(request, 'polls.html', context)
                 else:
                     testimonials = Testimonial.objects.filter(given_to=user_profile).order_by('-id')
-                    for question in poll_questions:
-                        answers = PollAnswer.objects.filter(question=question)
-                        myanswer = answers.filter(voted_by=user_profile).first()
-                        if myanswer:
-                            myanswer = myanswer.answer
-                        else:
-                            myanswer = None
-                        poll_nominees = []
-                        for answer in answers:
-                            if answer.answer not in poll_nominees:
-                                poll_nominees.append(answer.answer)
-                        polls[(question, myanswer)] = sorted(poll_nominees, key=nominees_sort_key)
+#                    for question in poll_questions:
+#                        answers = PollAnswer.objects.filter(question=question)
+#                        myanswer = answers.filter(voted_by=user_profile).first()
+#                        if myanswer:
+#                            myanswer = myanswer.answer
+#                        else:
+#                            myanswer = None
+#                        poll_nominees = []
+#                        for answer in answers:
+#                            if answer.answer not in poll_nominees:
+#                                poll_nominees.append(answer.answer)
+#                        polls[(question, myanswer)] = sorted(poll_nominees, key=nominees_sort_key)
                     context = {
                         'testimonials': testimonials,
-                        'polls': polls,
                         'user': user,
                         'user_profile': user_profile,
                         'logged_in': logged_in
